@@ -1,7 +1,7 @@
 // Setup initial game stats
-var score = 0;
-var lives = 2;
-
+var score        = 0;
+var lives        = 2;
+var powerPellets = 4;
 
 // Define your ghosts here
 var inky = {
@@ -9,7 +9,7 @@ var inky = {
   name: 'Inky',
   colour: 'Red',
   character: 'Shadow',
-  edible: false
+  edible: true
 };
 
 var blinky = {
@@ -17,7 +17,7 @@ var blinky = {
   name: 'Blinky',
   colour: 'Cyan',
   character: 'Speedy',
-  edible: false
+  edible: true
 };
 
 var pinky = {
@@ -25,7 +25,7 @@ var pinky = {
   name: 'Pinky',
   colour: 'Pink',
   character: 'Bashful',
-  edible: false
+  edible: true
 };
 
 var clyde = {
@@ -33,7 +33,7 @@ var clyde = {
   name: 'Clyde',
   colour: 'Orange',
   character: 'Pokey',
-  edible: false
+  edible: true
 };
 
 var ghosts = [inky, blinky, pinky, clyde];
@@ -52,6 +52,26 @@ function drawScreen() {
   }, 10);
 }
 
+
+function eatGhost(ghost) {
+  if (ghost.edible === false) {
+    lives -= 1;
+    console.log('\n'+ghost.name+' has eaten Pac-Man!');
+  } else {
+    score += 200;
+    ghost.edible = false;
+    console.log('\nPac-Man has eaten '+ghost.name);
+  }
+}
+
+function edible(ghost) {
+  if (ghost.edible === true) {
+    return 'edible';
+  } else {
+    return 'inedible';
+  }
+}
+
 function clearScreen() {
   console.log('\x1Bc');
 }
@@ -62,7 +82,19 @@ function displayStats() {
 
 function displayMenu() {
   console.log('\n\nSelect Option:\n');  // each \n creates a new line
+  console.log('Power-Pellets: ' + powerPellets);
   console.log('(d) Eat Dot');
+  if (powerPellets === 0) {
+  } else {
+  console.log('(p) Eat Power-Pellet');
+  }
+  ghosts.forEach(function(ghost) {
+    edibility = 'inedible';
+      if (ghost.edible === true) {
+        edibility = 'edible';
+      }
+      console.log('(' + ghost.menuOption + ') Eat ' + ghost.name + ' ' + edibility);
+  });
   console.log('(1) Eat Inky');
   console.log('(2) Eat Binky');
   console.log('(3) Eat Pinky');
@@ -83,6 +115,14 @@ function eatDot() {
   score += 10;
 }
 
+function eatPowerPellets(){
+  score += 50;
+  powerPellets -= 1;
+  ghosts.forEach(function(ghost) {
+  ghost.edible = true;
+  });
+}
+
 
 // Process Player's Input
 function processInput(key) {
@@ -93,6 +133,20 @@ function processInput(key) {
       break;
     case 'd':
       eatDot();
+      break;
+    case '1':
+      eatGhost(ghosts[1]);
+      break;
+    case '2':
+      eatGhost(ghosts[2]);
+      break;
+    case '3':
+      eatGhost(ghosts[3]);
+      break;
+    case '4':
+      eatGhost(ghosts[4]);
+    case 'p':
+      eatPowerPellet();
       break;
     default:
       console.log('\nInvalid Command!');
